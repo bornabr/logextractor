@@ -1,4 +1,5 @@
-log = open("20160312110436-HELIOS_base_1-vs-YuShan2015_2.rcg" , "rt")
+inputname = str(input())
+log = open(inputname , "rt")
 lines = list()
 for l in log:
     if l.find("show") != -1: # or l.find("playmode") != -1: or l.find("(team 1") != -1:    
@@ -60,11 +61,12 @@ for l in lines:
             data.pop(i)
             data.pop(i)
             data.pop(i)
-    print(data)
-    for i in range(len(data)):
-        print(i , data[i])
+    # print(data)
+    # for i in range(len(data)):
+    #     print(i , data[i])
     data.pop(0)
     show = int(data[0]) #which cycle
+    print(show)
     data.pop(0)
     data.pop(0)
     b = ball(float(data[0]),float(data[1]),float(data[2]),float(data[3][:-1]))
@@ -74,10 +76,10 @@ for l in lines:
     data.pop(0)
     lplayer = list()
     for i in range(0,11):
-        print(data)
+        # print(data)
         name = "l"
         data.pop(0)
-        print(data[0])
+        # print(data[0])
         unum = int(data[0][:-1])
         data.pop(0)
         Type = int(data[0])
@@ -91,8 +93,14 @@ for l in lines:
         data.pop(0)
         vy = float(data[0])
         data.pop(0)
-        for _ in range(11):
-            data.pop(0)
+        # for _ in range(11):
+        #     data.pop(0)
+        if "(c" in data:
+            data[0:data.index("(c") + 1] = []
+        elif "(s" in data:
+            data[0:data.index("(s") + 5] = []
+        elif "(v" in data:
+            data[0:data.index("(v") + 3] = []
         kick = int(data[0])
         data.pop(0)
         dash = int(data[0])
@@ -105,10 +113,10 @@ for l in lines:
         lplayer.append(player(name, unum, Type, x, y, vx, vy, kick, dash, catch))
     rplayer = list()
     for i in range(11):
-        print(data)
+        # print(data)
         name = "r"
         data.pop(0)
-        print(data[0])
+        # print(data[0])
         unum = int(data[0][:-1])
         data.pop(0)
         Type = int(data[0])
@@ -122,8 +130,14 @@ for l in lines:
         data.pop(0)
         vy = float(data[0])
         data.pop(0)
-        for _ in range(11):
-            data.pop(0)
+        # for _ in range(11):
+        #     data.pop(0)
+        if "(c" in data:
+            data[0:data.index("(c") + 1] = []
+        elif "(s" in data:
+            data[0:data.index("(s") + 5] = []
+        elif "(v" in data:
+            data[0:data.index("(v") + 3] = []
         kick = int(data[0])
         data.pop(0)
         dash = int(data[0])
@@ -134,6 +148,20 @@ for l in lines:
         for _ in range(7):
             data.pop(0)
         rplayer.append(player(name, unum, Type, x, y, vx, vy, kick, dash, catch))
-    cycles.append(cycle(show, ball, lplayer, rplayer))
-print(cycles)
-    
+    cycles.append(cycle(show, b, lplayer, rplayer))
+# for c in cycles:
+#     print(c.show, end=",")
+#     print("b," + str(c.ball.x) + "," + str(c.ball.y) + "," + str(c.ball.vx) + "," + str(c.ball.vy) + ",", end=",")
+#     for l in c.lplayer:
+#         print(l.name + "," + str(l.unum) + "," + str(l.Type) + "," + str(l.x) + "," + str(l.y) + "," + str(l.vx) + "," + str(l.vy) + "," + str(l.kick) + "," + str(l.dash) + "," + str(l.catch), end=",")
+#     for r in c.rplayer:
+#         print(r.name + "," + str(r.unum) + "," + str(r.Type) + "," + str(r.x) + "," + str(r.y) + "," + str(r.vx) + "," + str(r.vy) + "," + str(r.kick) + "," + str(r.dash) + "," + str(r.catch))
+for c in cycles:
+    f = open(inputname[:-4] + "-ext.txt","a")
+    f.write(str(c.show) + ",")
+    f.write("b," + str(c.ball.x) + "," + str(c.ball.y) + "," + str(c.ball.vx) + "," + str(c.ball.vy) + ",")
+    for l in c.lplayer:
+        f.write(l.name + "," + str(l.unum) + "," + str(l.Type) + "," + str(l.x) + "," + str(l.y) + "," + str(l.vx) + "," + str(l.vy) + "," + str(l.kick) + "," + str(l.dash) + "," + str(l.catch))
+    for r in c.rplayer:
+        f.write(r.name + "," + str(r.unum) + "," + str(r.Type) + "," + str(r.x) + "," + str(r.y) + "," + str(r.vx) + "," + str(r.vy) + "," + str(r.kick) + "," + str(r.dash) + "," + str(r.catch))
+    f.write("\n")
