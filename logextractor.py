@@ -2,10 +2,13 @@ def readdata():
     inputname = str(input())
     log = open(inputname , "rt")
     lines = list()
+    typelines = list()
     for l in log:
         if l.find("show") != -1: # or l.find("playmode") != -1: or l.find("(team 1") != -1:    
             lines.append(l)
-    return inputname,lines
+        elif l.find("(player_type (id ") != -1:
+            typelines.append(l)
+    return inputname,lines,typelines
 class player:
     def __init__(self,name,unum,Type,x, y, vx, vy, kick, dash,catch):
         self.name = name
@@ -31,6 +34,22 @@ class cycle:
         self.ball = ball
         self.lplayer = lplayer
         self.rplayer = rplayer
+
+class Type:
+    def __init__(self,typenum,kickable_margin,catchable_area):
+        self.typenum = typenum
+        self.kickable_margin = kickable_margin
+        self.catchable_area = catchable_area
+
+def typeextract(lines):
+    "it will extract info about players type"
+    types = list()
+    i = 1
+    for l in lines:
+        t = Type(i,l[l.find("kickable_margin") + len("kickable_margin") + 1:l.find(")(kick_rand")],l[l.find("catchable_area_l_stretch") + len("catchable_area_l_stretch") + 1:l.find("))")])
+        i += 1
+        types.append(t)
+    return types
 
 def extract(lines):
     "it will extract data"
@@ -175,6 +194,7 @@ def printdata(cyces):
         for r in c.rplayer:
             print(r.name + "," + str(r.unum) + "," + str(r.Type) + "," + str(r.x) + "," + str(r.y) + "," + str(r.vx) + "," + str(r.vy) + "," + str(r.kick) + "," + str(r.dash) + "," + str(r.catch))
 
-filename,lines = readdata()
+filename,lines,typelines = readdata()
 cycles = extract(lines)
+types = typeextract(typelines)
 writedata(cycles,filename)
